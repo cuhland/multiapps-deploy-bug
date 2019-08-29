@@ -1,0 +1,86 @@
+ID: multiapps-deploy-bug
+_schema-version: '3.1'
+parameters:
+  deploy_mode: html5-repo
+version: 0.0.1
+
+modules:
+ - name: backend
+   type: java
+   path: backend
+   parameters:
+      host: 000000000000000000000000000000000000000000000000000000000000000-more-than-64
+      memory: 1024M
+   build-parameters:
+      builder: maven
+      timeout: 15m
+      build-result: target/*.jar
+   provides:
+    - name: backend
+      properties:
+         url: '${default-url}'
+
+ - name: broker
+   type: nodejs
+   path: broker
+   parameters:
+      host: ${app-name}-${space}
+      memory: 1024M
+      create-service-broker: true 
+      service-broker-name: ${app-name}-${space}
+      service-broker-user: "BrokerUser"
+      service-broker-password: "SomeFancyBrokerPassword!"
+      service-broker-url: ${default-url}
+      service-broker-space-scoped: true
+   build-parameters:
+      ignore: [".gitignore", manifest.yml, "*.mtaext", "mta.*", "*.mtar", ".mta/"]
+      timeout: 15m
+   properties:
+      SBF_CATALOG_SUFFIX: ${space}
+      SBF_ENABLE_AUDITLOG: false
+      SBF_BROKER_CREDENTIALS: >
+        {
+          "BrokerUser": "SomeFancyBrokerPassword!"
+        }
+      SBF_SERVICE_CONFIG: >
+        {
+          "backend": {
+            "extend_credentials": {
+              "shared": {
+                "endpoints": {
+                  "backend": "~{backend/url}"
+                }
+              }
+            }
+          }
+        }
+   requires:
+   - name: backend
+   - name: uaa
+   - name: html5-host
+
+
+resources:
+ - name: uaa
+   type: com.sap.xs.uaa
+   parameters:
+      service: xsuaa
+      service-plan: broker
+      shared: true
+      config:
+         xsappname: uaa-${space}
+         tenant-mode: "dedicated"
+         scopes:
+         - name: "uaa.user"
+           description: TODO what does this scope do?"
+         role-templates:
+         - name: "Token_Exchange"
+           description: TODO what does this role template do?"
+           scope-references:
+           - uaa.user
+ - name: html5-host
+   type: org.cloudfoundry.managed-service
+   optional: true
+   parameters:
+      service: html5-apps-repo
+      service-plan: app-host

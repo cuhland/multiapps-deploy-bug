@@ -1,0 +1,28 @@
+{
+  "services": [
+    {
+      "name": "backend",
+      "description": "backend",
+      "bindable": true,
+      "metadata": {
+        "displayName": "backend",
+        "supportUrl": "https://xkcd.com/627/",
+        "sapservice": {
+          "sap.cloud.service": "com.cerner.scp.backend",
+          "saasregistryenabled": "false"
+        }
+      },
+      "tags": [
+        "Cerner"
+      ],
+      "plans": [
+        {
+          "name": "free",
+          "description": "a backend service",
+          "id": "be958f1a-f541-460e-8044-2a1b08745db5"
+        }
+      ],
+      "id": "adc17427-3e29-497a-89d0-936476786a68"
+    }
+  ]
+}

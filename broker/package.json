@@ -1,0 +1,21 @@
+{
+  "name": "backend-broker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "start-broker",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "1.0.4"
+  },
+  "dependencies": {
+    "@sap/sbf": "^5.1.1"
+  },
+  "engines": {
+    "node": "^8.16.0"
+  }
+}
